@@ -1,9 +1,12 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter, useNavigate, useParams, Routes, Route, Link } from "react-router-dom";
-import { MapPin, Search, ArrowRight, CalendarDays, Share2, Menu, ChevronRight } from "lucide-react";
+import { BrowserRouter, Link, Route, Routes, useNavigate, useParams } from "react-router-dom";
+import { ArrowRight, CalendarDays, ChevronRight, MapPin, Menu, Search, Share2 } from "lucide-react";
 import "./index.css";
-const data = [
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000";
+
+const fallbackData = [
   [
     "comala-pueblo-magico",
     "Comala, pueblo mágico",
@@ -84,21 +87,62 @@ const data = [
     "Música, danza y expresiones artísticas de la región.",
     "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=1000",
   ],
-].map(([slug, name, type, municipality, description, image], i) => ({
+].map(([slug, name, type, municipality, description, image], index) => ({
   slug,
   name,
   type,
   municipality,
   description,
   image,
-  featured: i < 3,
+  featured: index < 3,
+  active: true,
   schedule:
     type === "Tianguis"
-      ? "Domingos · 08:00–14:00"
+      ? "Domingos · 08:00-14:00"
       : type === "Eventos"
         ? "18 oct 2026 · 18:00"
-        : "Abierto hoy · 10:00–17:00",
+        : "Abierto hoy · 10:00-17:00",
 }));
+
+async function apiRequest(path, options) {
+  const response = await fetch(`${API_BASE_URL}${path}`, options);
+
+  if (!response.ok) {
+    throw new Error(`API error ${response.status}`);
+  }
+
+  return response.json();
+}
+
+function useContent() {
+  const [items, setItems] = useState(fallbackData);
+  const [status, setStatus] = useState("loading");
+
+  useEffect(() => {
+    let ignore = false;
+
+    apiRequest("/api/content")
+      .then((rows) => {
+        if (!ignore) {
+          setItems(rows);
+          setStatus("ready");
+        }
+      })
+      .catch(() => {
+        if (!ignore) {
+          setItems(fallbackData);
+          setStatus("fallback");
+        }
+      });
+
+    return () => {
+      ignore = true;
+    };
+  }, []);
+
+  return { items, setItems, status };
+}
+
 function Header() {
   return (
     <header className="absolute top-0 z-20 w-full text-white">
@@ -116,8 +160,10 @@ function Header() {
     </header>
   );
 }
+
 function Hero() {
-  let nav = useNavigate();
+  const navigate = useNavigate();
+
   return (
     <>
       <section className="relative flex min-h-[650px] items-center overflow-hidden bg-royal">
@@ -136,7 +182,7 @@ function Hero() {
             hacen único a Colima.
           </p>
           <button
-            onClick={() => nav("/explorar")}
+            onClick={() => navigate("/explorar")}
             className="mt-9 flex items-center gap-3 rounded-full bg-gold px-7 py-4 font-bold text-royal shadow-xl transition hover:scale-105"
           >
             Explorar el mapa <ArrowRight size={19} />
@@ -144,6 +190,7 @@ function Hero() {
         </div>
         <div className="absolute bottom-0 left-0 h-24 w-full bg-gradient-to-t from-sand to-transparent" />
       </section>
+
       <div className="relative mx-auto -mt-20 max-w-6xl px-6">
         <div className="grid gap-4 md:grid-cols-3">
           <div className="rounded-2xl bg-white p-6 shadow-xl md:col-span-2">
@@ -154,7 +201,7 @@ function Hero() {
             <p className="mt-2 text-slate-500">2 lugares · 1 tianguis · 1 evento</p>
           </div>
           <button
-            onClick={() => nav("/explorar")}
+            onClick={() => navigate("/explorar")}
             className="flex items-center justify-between rounded-2xl bg-palm p-6 text-left font-bold text-white shadow-xl"
           >
             Traza tu propia ruta <ArrowRight />
@@ -164,15 +211,17 @@ function Hero() {
     </>
   );
 }
+
 function Card({ item }) {
   return (
     <Link
-      to={"/lugar/" + item.slug}
+      to={`/lugar/${item.slug}`}
       className="group overflow-hidden rounded-2xl bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
     >
       <img
         src={item.image}
         className="h-48 w-full object-cover transition duration-500 group-hover:scale-105"
+        alt={item.name}
       />
       <div className="p-5">
         <p className="text-xs font-bold uppercase tracking-widest text-volcano">{item.type}</p>
@@ -185,7 +234,8 @@ function Card({ item }) {
     </Link>
   );
 }
-function Home() {
+
+function Home({ items }) {
   return (
     <>
       <Header />
@@ -208,29 +258,37 @@ function Home() {
           </Link>
         </div>
         <div className="grid gap-6 md:grid-cols-3">
-          {data
-            .filter((x) => x.featured)
-            .map((x) => (
-              <Card key={x.slug} item={x} />
+          {items
+            .filter((item) => item.featured)
+            .map((item) => (
+              <Card key={item.slug} item={item} />
             ))}
         </div>
       </main>
     </>
   );
 }
-function Explore() {
-  let [types, setTypes] = useState(["Turismo"]);
-  let [q, setQ] = useState("");
-  let filtered = useMemo(
+
+function Explore({ items }) {
+  const [types, setTypes] = useState(["Turismo"]);
+  const [query, setQuery] = useState("");
+
+  const filtered = useMemo(
     () =>
-      data.filter(
-        (x) =>
-          (types.length === 0 || types.includes(x.type)) &&
-          (x.name + x.municipality + x.description).toLowerCase().includes(q.toLowerCase())
-      ),
-    [types, q]
+      items.filter((item) => {
+        const matchesType = types.length === 0 || types.includes(item.type);
+        const searchable = `${item.name} ${item.municipality} ${item.description}`.toLowerCase();
+        return matchesType && searchable.includes(query.toLowerCase());
+      }),
+    [items, types, query]
   );
-  let toggle = (t) => setTypes((v) => (v.includes(t) ? v.filter((x) => x !== t) : [...v, t]));
+
+  const toggleType = (type) => {
+    setTypes((current) =>
+      current.includes(type) ? current.filter((item) => item !== type) : [...current, type]
+    );
+  };
+
   return (
     <>
       <Header />
@@ -241,37 +299,39 @@ function Explore() {
           <div className="mt-8 flex max-w-2xl items-center gap-3 rounded-xl bg-white px-4 py-3 text-slate-500">
             <Search size={20} />
             <input
-              value={q}
-              onChange={(e) => setQ(e.target.value)}
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
               placeholder="Busca por nombre, municipio o palabra clave"
               className="w-full outline-none"
             />
           </div>
         </div>
       </div>
+
       <main className="mx-auto max-w-6xl px-6 py-10">
         <div className="mb-8 flex flex-wrap gap-2">
-          {["Turismo", "Tianguis", "Mercados", "Eventos"].map((t) => (
+          {["Turismo", "Tianguis", "Mercados", "Eventos"].map((type) => (
             <button
-              key={t}
-              onClick={() => toggle(t)}
-              className={
-                "rounded-full border px-5 py-2 text-sm font-bold " +
-                (types.includes(t)
+              key={type}
+              onClick={() => toggleType(type)}
+              className={`rounded-full border px-5 py-2 text-sm font-bold ${
+                types.includes(type)
                   ? "border-royal bg-royal text-white"
-                  : "border-slate-200 bg-white text-slate-600")
-              }
+                  : "border-slate-200 bg-white text-slate-600"
+              }`}
             >
-              {t}
+              {type}
             </button>
           ))}
         </div>
+
         <div className="grid gap-8 lg:grid-cols-[1fr_1.2fr]">
           <div className="order-2 grid gap-5 sm:grid-cols-2 lg:order-1">
-            {filtered.map((x) => (
-              <Card key={x.slug} item={x} />
+            {filtered.map((item) => (
+              <Card key={item.slug} item={item} />
             ))}
           </div>
+
           <div className="order-1 h-[520px] rounded-3xl bg-[#dce9de] p-6 lg:sticky lg:top-6 lg:order-2">
             <div
               className="relative h-full overflow-hidden rounded-2xl bg-[#cfe2d1]"
@@ -284,11 +344,14 @@ function Explore() {
               <p className="absolute left-6 top-6 rounded-full bg-white px-4 py-2 text-xs font-bold text-palm shadow">
                 Mapa interactivo
               </p>
-              {filtered.map((x, i) => (
+              {filtered.map((item, index) => (
                 <Link
-                  key={x.slug}
-                  to={"/lugar/" + x.slug}
-                  style={{ left: `${15 + ((i * 19) % 70)}%`, top: `${20 + ((i * 31) % 65)}%` }}
+                  key={item.slug}
+                  to={`/lugar/${item.slug}`}
+                  style={{
+                    left: `${15 + ((index * 19) % 70)}%`,
+                    top: `${20 + ((index * 31) % 65)}%`,
+                  }}
                   className="absolute -translate-x-1/2 -translate-y-1/2 text-volcano drop-shadow"
                 >
                   <MapPin fill="currentColor" size={34} />
@@ -297,6 +360,7 @@ function Explore() {
             </div>
           </div>
         </div>
+
         {!filtered.length && (
           <p className="py-16 text-center text-slate-500">
             No encontramos resultados. Intenta limpiar tus filtros.
@@ -306,14 +370,37 @@ function Explore() {
     </>
   );
 }
-function Detail() {
-  let { slug } = useParams();
-  let item = data.find((x) => x.slug === slug) || data[0];
+
+function Detail({ items }) {
+  const { slug } = useParams();
+  const initialItem = items.find((item) => item.slug === slug) || items[0] || fallbackData[0];
+  const [item, setItem] = useState(initialItem);
+
+  useEffect(() => {
+    let ignore = false;
+
+    apiRequest(`/api/content/${slug}`)
+      .then((row) => {
+        if (!ignore) {
+          setItem(row);
+        }
+      })
+      .catch(() => {
+        if (!ignore) {
+          setItem(initialItem);
+        }
+      });
+
+    return () => {
+      ignore = true;
+    };
+  }, [initialItem, slug]);
+
   return (
     <>
       <Header />
       <div className="relative h-[440px] bg-royal">
-        <img src={item.image} className="h-full w-full object-cover opacity-70" />
+        <img src={item.image} className="h-full w-full object-cover opacity-70" alt={item.name} />
         <div className="absolute inset-0 bg-gradient-to-t from-royal to-transparent" />
         <div className="absolute bottom-12 left-0 w-full px-6 text-white">
           <div className="mx-auto max-w-4xl">
@@ -324,6 +411,7 @@ function Detail() {
           </div>
         </div>
       </div>
+
       <main className="mx-auto max-w-4xl px-6 py-14">
         <div className="grid gap-12 md:grid-cols-[1fr_280px]">
           <article>
@@ -341,6 +429,7 @@ function Detail() {
               <Share2 size={17} /> Compartir
             </button>
           </article>
+
           <aside className="h-fit rounded-2xl bg-white p-6 shadow-lg">
             <p className="font-bold text-royal">Información práctica</p>
             <p className="mt-5 flex gap-3 text-sm">
@@ -357,73 +446,94 @@ function Detail() {
     </>
   );
 }
-function Admin() {
-  let [active, setActive] = useState(true);
+
+function Admin({ items, setItems }) {
+  const toggleActive = async (item) => {
+    const nextActive = !item.active;
+    const previousItems = items;
+
+    setItems((current) =>
+      current.map((currentItem) =>
+        currentItem.slug === item.slug ? { ...currentItem, active: nextActive } : currentItem
+      )
+    );
+
+    try {
+      await apiRequest(`/api/admin/content/${item.slug}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ active: nextActive }),
+      });
+    } catch {
+      setItems(previousItems);
+    }
+  };
+
   return (
-    <>
-      <div className="min-h-screen bg-slate-100">
-        <div className="bg-royal px-6 py-5 text-white">
-          <div className="mx-auto flex max-w-6xl justify-between">
-            <Link to="/" className="font-black">
-              COLIMA EN EL MAPA
-            </Link>
-            <Link to="/" className="text-sm">
-              Ver sitio público
-            </Link>
-          </div>
+    <div className="min-h-screen bg-slate-100">
+      <div className="bg-royal px-6 py-5 text-white">
+        <div className="mx-auto flex max-w-6xl justify-between">
+          <Link to="/" className="font-black">
+            COLIMA EN EL MAPA
+          </Link>
+          <Link to="/" className="text-sm">
+            Ver sitio público
+          </Link>
         </div>
-        <main className="mx-auto max-w-6xl px-6 py-12">
-          <p className="text-sm font-bold uppercase tracking-widest text-volcano">Administración</p>
-          <h1 className="display mt-2 text-5xl font-bold text-royal">Contenido</h1>
-          <div className="mt-8 rounded-2xl bg-white p-6 shadow-sm">
-            <div className="mb-6 flex justify-between">
-              <input className="rounded-lg border px-4 py-2" placeholder="Buscar contenido..." />
-              <button className="rounded-lg bg-royal px-4 py-2 font-bold text-white">
-                + Nuevo contenido
-              </button>
-            </div>
-            {data.slice(0, 6).map((x) => (
-              <div className="flex items-center justify-between border-t py-4" key={x.slug}>
-                <div>
-                  <p className="font-bold">{x.name}</p>
-                  <p className="text-sm text-slate-500">
-                    {x.type} · {x.municipality}
-                  </p>
-                </div>
-                <div className="flex items-center gap-4">
-                  <span
-                    className={
-                      "rounded-full px-3 py-1 text-xs font-bold " +
-                      (active ? "bg-green-100 text-palm" : "bg-slate-100 text-slate-500")
-                    }
-                  >
-                    {active ? "Activo" : "Inactivo"}
-                  </span>
-                  <button
-                    onClick={() => setActive(!active)}
-                    className="text-sm font-bold text-royal"
-                  >
-                    {active ? "Desactivar" : "Activar"}
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </main>
       </div>
-    </>
+
+      <main className="mx-auto max-w-6xl px-6 py-12">
+        <p className="text-sm font-bold uppercase tracking-widest text-volcano">Administración</p>
+        <h1 className="display mt-2 text-5xl font-bold text-royal">Contenido</h1>
+        <div className="mt-8 rounded-2xl bg-white p-6 shadow-sm">
+          <div className="mb-6 flex justify-between">
+            <input className="rounded-lg border px-4 py-2" placeholder="Buscar contenido..." />
+            <button className="rounded-lg bg-royal px-4 py-2 font-bold text-white">
+              + Nuevo contenido
+            </button>
+          </div>
+
+          {items.map((item) => (
+            <div className="flex items-center justify-between border-t py-4" key={item.slug}>
+              <div>
+                <p className="font-bold">{item.name}</p>
+                <p className="text-sm text-slate-500">
+                  {item.type} · {item.municipality}
+                </p>
+              </div>
+              <div className="flex items-center gap-4">
+                <span
+                  className={`rounded-full px-3 py-1 text-xs font-bold ${
+                    item.active ? "bg-green-100 text-palm" : "bg-slate-100 text-slate-500"
+                  }`}
+                >
+                  {item.active ? "Activo" : "Inactivo"}
+                </span>
+                <button onClick={() => toggleActive(item)} className="text-sm font-bold text-royal">
+                  {item.active ? "Desactivar" : "Activar"}
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </main>
+    </div>
   );
 }
+
 function App() {
+  const { items, setItems } = useContent();
+
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/explorar" element={<Explore />} />
-      <Route path="/lugar/:slug" element={<Detail />} />
-      <Route path="/admin" element={<Admin />} />
+      <Route path="/" element={<Home items={items} />} />
+      <Route path="/explorar" element={<Explore items={items} />} />
+      <Route path="/lugar/:slug" element={<Detail items={items} />} />
+      <Route path="/admin" element={<Admin items={items} setItems={setItems} />} />
     </Routes>
   );
 }
+
 createRoot(document.getElementById("root")).render(
   <BrowserRouter>
     <App />
