@@ -607,21 +607,6 @@ function AdminLogin() {
   );
 }
 
-
-function Admin({ items, setItems }) {
-  const navigate = useNavigate();
-  const token = getAdminToken();
-
-  if (!token) {
-    return <Navigate to="/admin/login" replace />;
-  }
-
-  const logout = () => {
-    clearAdminToken();
-    navigate("/admin/login", { replace: true });
-  };
-}
-
 await apiRequest(`/api/admin/content/${item.slug}`, {
   method: "PATCH",
   headers: {
