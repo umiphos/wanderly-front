@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import {
   BrowserRouter,
   Link,
+  Navigate,
   Route,
   Routes,
   useNavigate,
@@ -20,6 +21,7 @@ import {
 import "./index.css";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000";
+const ADMIN_TOKEN_KEY = "wanderly_admin_token";
 
 const fallbackData = [
   [
@@ -465,6 +467,8 @@ function Detail({ items }) {
 }
 
 function Admin({ items, setItems }) {
+  const navigate = useNavigate();
+
   const toggleActive = async (item) => {
     const nextActive = !item.active;
     const previousItems = items;
@@ -478,12 +482,25 @@ function Admin({ items, setItems }) {
     try {
       await apiRequest(`/api/admin/content/${item.slug}`, {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          Authorization: `Bearer ${getAdminToken()}`,
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({ active: nextActive }),
       });
-    } catch {
+    } catch (error) {
       setItems(previousItems);
+
+      if (error.message === "API error 401") {
+        clearAdminToken();
+        navigate("/admin/login", { replace: true });
+      }
     }
+  };
+
+  const handleLogout = () => {
+    clearAdminToken();
+    navigate("/admin/login", { replace: true });
   };
 
   return (
@@ -493,9 +510,12 @@ function Admin({ items, setItems }) {
           <Link to="/" className="font-black">
             COLIMA EN EL MAPA
           </Link>
-          <Link to="/" className="text-sm">
-            Ver sitio público
-          </Link>
+          <div className="flex items-center gap-5 text-sm">
+            <Link to="/">Ver sitio público</Link>
+            <button onClick={handleLogout} className="font-bold text-gold">
+              Cerrar sesión
+            </button>
+          </div>
         </div>
       </div>
 
@@ -557,6 +577,12 @@ function AdminLogin() {
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  useEffect(() => {
+    if (getAdminToken()) {
+      navigate("/admin", { replace: true });
+    }
+  }, [navigate]);
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError("");
@@ -590,16 +616,36 @@ function AdminLogin() {
         <label className="mt-8 block text-sm font-bold text-slate-700" htmlFor="email">
           Correo
         </label>
-        <input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+        <input
+          id="email"
+          type="email"
+          value={email}
+          onChange={(event) => setEmail(event.target.value)}
+          className="mt-2 w-full rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-royal"
+          autoComplete="email"
+          required
+        />
 
         <label className="mt-5 block text-sm font-bold text-slate-700" htmlFor="password">
           Contraseña
         </label>
-        <input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+        <input
+          id="password"
+          type="password"
+          value={password}
+          onChange={(event) => setPassword(event.target.value)}
+          className="mt-2 w-full rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-royal"
+          autoComplete="current-password"
+          required
+        />
 
         {error && <p className="mt-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
 
-        <button type="submit" disabled={isSubmitting}>
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="mt-7 w-full rounded-lg bg-royal px-5 py-3 font-bold text-white transition hover:bg-blue-900 disabled:cursor-not-allowed disabled:opacity-60"
+        >
           {isSubmitting ? "Entrando..." : "Entrar"}
         </button>
       </form>
@@ -607,15 +653,9 @@ function AdminLogin() {
   );
 }
 
-await apiRequest(`/api/admin/content/${item.slug}`, {
-  method: "PATCH",
-  headers: {
-    Authorization: `Bearer ${token}`,
-    "Content-Type": "application/json",
-  },
-  body: JSON.stringify({ active: nextActive }),
-});
-
+function ProtectedAdminRoute({ children }) {
+  return getAdminToken() ? children : <Navigate to="/admin/login" replace />;
+}
 
 function App() {
   const { items, setItems } = useContent();
@@ -626,7 +666,14 @@ function App() {
       <Route path="/explorar" element={<Explore items={items} />} />
       <Route path="/lugar/:slug" element={<Detail items={items} />} />
       <Route path="/admin/login" element={<AdminLogin />} />
-      <Route path="/admin" element={<Admin items={items} setItems={setItems} />} />
+      <Route
+        path="/admin"
+        element={
+          <ProtectedAdminRoute>
+            <Admin items={items} setItems={setItems} />
+          </ProtectedAdminRoute>
+        }
+      />
     </Routes>
   );
 }
