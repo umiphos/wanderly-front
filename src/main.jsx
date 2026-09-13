@@ -1,7 +1,22 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter, Link, Route, Routes, useNavigate, useParams } from "react-router-dom";
-import { ArrowRight, CalendarDays, ChevronRight, MapPin, Menu, Search, Share2 } from "lucide-react";
+import {
+  BrowserRouter,
+  Link,
+  Route,
+  Routes,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
+import {
+  ArrowRight,
+  CalendarDays,
+  ChevronRight,
+  MapPin,
+  Menu,
+  Search,
+  Share2,
+} from "lucide-react";
 import "./index.css";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000";
@@ -178,8 +193,8 @@ function Hero() {
             <span className="text-gold">estado.</span>
           </h1>
           <p className="mt-8 max-w-lg text-lg leading-relaxed text-blue-50">
-            Lugares que vale la pena encontrar. Explora la naturaleza, la cultura y los sabores que
-            hacen único a Colima.
+            Lugares que vale la pena encontrar. Explora la naturaleza, la cultura y los sabores
+            que hacen único a Colima.
           </p>
           <button
             onClick={() => navigate("/explorar")}
@@ -349,8 +364,8 @@ function Explore({ items }) {
                   key={item.slug}
                   to={`/lugar/${item.slug}`}
                   style={{
-                    left: `${15 + ((index * 19) % 70)}%`,
-                    top: `${20 + ((index * 31) % 65)}%`,
+                    left: `${15 + (index * 19) % 70}%`,
+                    top: `${20 + (index * 31) % 65}%`,
                   }}
                   className="absolute -translate-x-1/2 -translate-y-1/2 text-volcano drop-shadow"
                 >
@@ -416,7 +431,9 @@ function Detail({ items }) {
         <div className="grid gap-12 md:grid-cols-[1fr_280px]">
           <article>
             <p className="text-xl leading-relaxed text-slate-600">{item.description}</p>
-            <h2 className="display mt-10 text-3xl font-bold text-royal">Vale la pena conocerlo</h2>
+            <h2 className="display mt-10 text-3xl font-bold text-royal">
+              Vale la pena conocerlo
+            </h2>
             <p className="mt-4 leading-8 text-slate-600">
               Este espacio forma parte de la selección de lugares para descubrir Colima. Encuentra
               información práctica, disfruta el recorrido y comparte este lugar con quien quieras
@@ -521,6 +538,100 @@ function Admin({ items, setItems }) {
   );
 }
 
+function getAdminToken() {
+  return localStorage.getItem(ADMIN_TOKEN_KEY);
+}
+
+function saveAdminToken(token) {
+  localStorage.setItem(ADMIN_TOKEN_KEY, token);
+}
+
+function clearAdminToken() {
+  localStorage.removeItem(ADMIN_TOKEN_KEY);
+}
+
+function AdminLogin() {
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setError("");
+    setIsSubmitting(true);
+
+    try {
+      const response = await apiRequest("/api/admin/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      saveAdminToken(response.access_token);
+      navigate("/admin", { replace: true });
+    } catch {
+      setError("Credenciales inválidas o servicio no disponible.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-royal px-6">
+      <form onSubmit={handleSubmit} className="w-full max-w-md rounded-2xl bg-white p-8 shadow-xl">
+        <p className="text-sm font-bold uppercase tracking-widest text-volcano">Administración</p>
+        <h1 className="display mt-2 text-4xl font-bold text-royal">Iniciar sesión</h1>
+        <p className="mt-3 text-sm leading-6 text-slate-500">
+          Acceso privado para gestionar el contenido de la demo turística.
+        </p>
+
+        <label className="mt-8 block text-sm font-bold text-slate-700" htmlFor="email">
+          Correo
+        </label>
+        <input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+
+        <label className="mt-5 block text-sm font-bold text-slate-700" htmlFor="password">
+          Contraseña
+        </label>
+        <input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+
+        {error && <p className="mt-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
+
+        <button type="submit" disabled={isSubmitting}>
+          {isSubmitting ? "Entrando..." : "Entrar"}
+        </button>
+      </form>
+    </div>
+  );
+}
+
+
+function Admin({ items, setItems }) {
+  const navigate = useNavigate();
+  const token = getAdminToken();
+
+  if (!token) {
+    return <Navigate to="/admin/login" replace />;
+  }
+
+  const logout = () => {
+    clearAdminToken();
+    navigate("/admin/login", { replace: true });
+  };
+}
+
+await apiRequest(`/api/admin/content/${item.slug}`, {
+  method: "PATCH",
+  headers: {
+    Authorization: `Bearer ${token}`,
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({ active: nextActive }),
+});
+
+
 function App() {
   const { items, setItems } = useContent();
 
@@ -529,6 +640,7 @@ function App() {
       <Route path="/" element={<Home items={items} />} />
       <Route path="/explorar" element={<Explore items={items} />} />
       <Route path="/lugar/:slug" element={<Detail items={items} />} />
+      <Route path="/admin/login" element={<AdminLogin />} />
       <Route path="/admin" element={<Admin items={items} setItems={setItems} />} />
     </Routes>
   );
