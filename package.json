@@ -15,7 +15,7 @@
     "react-router-dom": "latest",
     "tailwind-merge": "^3.6.0",
     "tailwindcss": "^4.3.3",
-    "vite": "latest",
+    "vite": "^8.3.0",
     "vite-plugin": "^0.0.0"
   },
   "devDependencies": {
