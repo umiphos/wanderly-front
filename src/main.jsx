@@ -466,43 +466,8 @@ function Detail({ items }) {
   );
 }
 
-function Admin() {
+function Admin({ items, setItems }) {
   const navigate = useNavigate();
-  const [items, setItems] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [loadError, setLoadError] = useState("");
-
-  useEffect(() => {
-    let ignore = false;
-
-    apiRequest("/api/admin/content", {
-      headers: { Authorization: `Bearer ${getAdminToken()}` },
-    })
-      .then((rows) => {
-        if (!ignore) {
-          setItems(rows);
-          setLoadError("");
-        }
-      })
-      .catch((error) => {
-        if (ignore) return;
-
-        if (error.message === "API error 401") {
-          clearAdminToken();
-          navigate("/admin/login", { replace: true });
-          return;
-        }
-
-        setLoadError("No fue posible cargar el contenido administrativo.");
-      })
-      .finally(() => {
-        if (!ignore) setIsLoading(false);
-      });
-
-    return () => {
-      ignore = true;
-    };
-  }, [navigate]);
 
   const toggleActive = async (item) => {
     const nextActive = !item.active;
@@ -565,17 +530,7 @@ function Admin() {
             </button>
           </div>
 
-          {isLoading && <p className="border-t py-8 text-center text-slate-500">Cargando contenido...</p>}
-
-          {loadError && (
-            <p className="border-t py-8 text-center text-red-700">{loadError}</p>
-          )}
-
-          {!isLoading && !loadError && items.length === 0 && (
-            <p className="border-t py-8 text-center text-slate-500">No hay contenido registrado.</p>
-          )}
-
-          {!isLoading && !loadError && items.map((item) => (
+          {items.map((item) => (
             <div className="flex items-center justify-between border-t py-4" key={item.slug}>
               <div>
                 <p className="font-bold">{item.name}</p>
@@ -703,7 +658,7 @@ function ProtectedAdminRoute({ children }) {
 }
 
 function App() {
-  const { items } = useContent();
+  const { items, setItems } = useContent();
 
   return (
     <Routes>
@@ -715,7 +670,7 @@ function App() {
         path="/admin"
         element={
           <ProtectedAdminRoute>
-            <Admin />
+            <Admin items={items} setItems={setItems} />
           </ProtectedAdminRoute>
         }
       />
