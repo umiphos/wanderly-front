@@ -9,15 +9,8 @@ import {
   useNavigate,
   useParams,
 } from "react-router-dom";
-import {
-  ArrowRight,
-  CalendarDays,
-  ChevronRight,
-  MapPin,
-  Menu,
-  Search,
-  Share2,
-} from "lucide-react";
+import { ArrowRight, CalendarDays, ChevronRight, MapPin, Menu, Search, Share2 } from "lucide-react";
+import TourismMap, { googleMapsUrl, hasCoordinates } from "./TourismMap";
 import "./index.css";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000";
@@ -31,14 +24,21 @@ const fallbackData = [
     "Comala",
     "Calles blancas, portales y la atmósfera que inspiró a Juan Rulfo.",
     "https://images.unsplash.com/photo-1518005020951-eccb494ad742?w=1000",
+    19.3231443,
+    -103.7582664,
+    "Abierto todo el día",
   ],
   [
     "volcan-de-fuego",
-    "Volcán de Fuego",
+    "Volcán de Fuego desde Suchitlán",
     "Turismo",
     "Comala",
-    "El paisaje emblemático de Colima y una vista inolvidable del occidente.",
+    "Observa el volcán desde Suchitlán. Este punto de referencia no ofrece acceso al cráter.",
     "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1000",
+    19.3745585,
+    -103.7087398,
+    "Vista al aire libre · consulta avisos de Protección Civil",
+    "El marcador corresponde al centro de Suchitlán, no a un mirador específico ni al cráter. Comprueba el punto de observación y las condiciones locales antes de salir.",
   ],
   [
     "playa-la-boquita",
@@ -47,6 +47,9 @@ const fallbackData = [
     "Manzanillo",
     "Bahía tranquila, gastronomía local y atardeceres frente al Pacífico.",
     "https://images.unsplash.com/photo-1507521428034-b723cf961d3e?w=1000",
+    19.1060124,
+    -104.398862,
+    "Abierto todo el día",
   ],
   [
     "jardin-libertad",
@@ -55,6 +58,9 @@ const fallbackData = [
     "Colima",
     "El corazón del centro histórico de la ciudad de Colima.",
     "https://images.unsplash.com/photo-1531058020387-3be344556be6?w=1000",
+    19.2433584,
+    -103.7285218,
+    "Abierto todo el día",
   ],
   [
     "laguna-la-maria",
@@ -63,6 +69,10 @@ const fallbackData = [
     "Comala",
     "Un espacio natural para caminar, respirar y disfrutar el paisaje.",
     "https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=1000",
+    19.461445,
+    -103.7095051,
+    "Horario de acceso por confirmar",
+    "El punto señala el centro de la laguna, no la entrada al centro ecoturístico. Confirma el acceso antes de viajar.",
   ],
   [
     "museo-regional-historia",
@@ -71,22 +81,33 @@ const fallbackData = [
     "Colima",
     "Conoce la historia y las expresiones culturales de la región.",
     "https://images.unsplash.com/photo-1564399579883-451a5d44ec08?w=1000",
+    19.2427547,
+    -103.7289773,
+    "Horario de visita por confirmar",
   ],
   [
     "tianguis-villa-alvarez",
-    "Tianguis de Villa de Álvarez",
+    "Tianguis de la Villa",
     "Tianguis",
     "Villa de Álvarez",
-    "Sabores, productos y encuentro comunitario cada semana.",
+    "Sabores, productos y encuentro comunitario en la avenida Josefa Ortiz de Domínguez.",
     "https://images.unsplash.com/photo-1488459716781-31db52582fe9?w=1000",
+    19.2668533,
+    -103.7432098,
+    "Domingos · horario por confirmar",
+    "El punto corresponde al tianguis registrado en la avenida Josefa Ortiz de Domínguez. Confirma que opere y su horario antes de visitarlo.",
   ],
   [
     "tianguis-artesanal-comala",
-    "Tianguis artesanal de Comala",
+    "Tianguis artesanal de Comala (demo)",
     "Tianguis",
     "Comala",
-    "Artesanías y productos locales en fechas especiales.",
+    "Ejemplo de actividad artesanal de fechas variables; la sede del tianguis no está confirmada.",
     "https://images.unsplash.com/photo-1528698827591-e19ccd7bc23d?w=1000",
+    19.3261439,
+    -103.755424,
+    "Fechas variables · por confirmar",
+    "Contenido ilustrativo. El punto ubica la Casa de la Cultura de Comala como referencia, no una sede confirmada del tianguis.",
   ],
   [
     "mercado-obregon",
@@ -95,31 +116,41 @@ const fallbackData = [
     "Colima",
     "Un recorrido por los sabores cotidianos de la capital.",
     "https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?w=1000",
+    19.2402448,
+    -103.7298978,
+    "Horario de atención por confirmar",
   ],
   [
     "feria-cultura-colima",
-    "Festival de Cultura Colima",
+    "Festival de Cultura Colima (demo)",
     "Eventos",
     "Colima",
-    "Música, danza y expresiones artísticas de la región.",
+    "Ejemplo de evento cultural para demostrar los filtros; no existe cartelera confirmada.",
     "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=1000",
+    19.2429725,
+    -103.7297302,
+    "Fecha de ejemplo: 18 oct 2026 · 18:00",
+    "Evento ilustrativo. El punto muestra el Teatro Hidalgo como recinto de referencia; ni la sede ni la fecha están confirmadas para este festival.",
   ],
-].map(([slug, name, type, municipality, description, image], index) => ({
-  slug,
-  name,
-  type,
-  municipality,
-  description,
-  image,
-  featured: index < 3,
-  active: true,
-  schedule:
-    type === "Tianguis"
-      ? "Domingos · 08:00-14:00"
-      : type === "Eventos"
-        ? "18 oct 2026 · 18:00"
-        : "Abierto hoy · 10:00-17:00",
-}));
+].map(
+  (
+    [slug, name, type, municipality, description, image, lat, lng, schedule, location_note],
+    index
+  ) => ({
+    slug,
+    name,
+    type,
+    municipality,
+    description,
+    image,
+    lat,
+    lng,
+    location_note,
+    featured: index < 3,
+    active: true,
+    schedule,
+  })
+);
 
 async function apiRequest(path, options) {
   const response = await fetch(`${API_BASE_URL}${path}`, options);
@@ -178,8 +209,9 @@ function Header() {
   );
 }
 
-function Hero() {
+function Hero({ items }) {
   const navigate = useNavigate();
+  const placesCount = items.filter((item) => item.active).length;
 
   return (
     <>
@@ -195,8 +227,8 @@ function Hero() {
             <span className="text-gold">estado.</span>
           </h1>
           <p className="mt-8 max-w-lg text-lg leading-relaxed text-blue-50">
-            Lugares que vale la pena encontrar. Explora la naturaleza, la cultura y los sabores
-            que hacen único a Colima.
+            Lugares que vale la pena encontrar. Explora la naturaleza, la cultura y los sabores que
+            hacen único a Colima.
           </p>
           <button
             onClick={() => navigate("/explorar")}
@@ -212,16 +244,18 @@ function Hero() {
         <div className="grid gap-4 md:grid-cols-3">
           <div className="rounded-2xl bg-white p-6 shadow-xl md:col-span-2">
             <p className="mb-1 text-xs font-bold uppercase tracking-widest text-volcano">
-              Para este fin de semana
+              Lugares para descubrir
             </p>
-            <h2 className="text-2xl font-bold">4 planes cerca de ti</h2>
-            <p className="mt-2 text-slate-500">2 lugares · 1 tianguis · 1 evento</p>
+            <h2 className="text-2xl font-bold">{placesCount} puntos en el mapa</h2>
+            <p className="mt-2 text-slate-500">
+              Lugares turísticos, tianguis, mercados y ejemplos culturales
+            </p>
           </div>
           <button
             onClick={() => navigate("/explorar")}
             className="flex items-center justify-between rounded-2xl bg-palm p-6 text-left font-bold text-white shadow-xl"
           >
-            Traza tu propia ruta <ArrowRight />
+            Explora las ubicaciones <ArrowRight />
           </button>
         </div>
       </div>
@@ -253,10 +287,29 @@ function Card({ item }) {
 }
 
 function Home({ items }) {
+  const featured = items.filter((item) => item.active && item.featured);
+
   return (
     <>
       <Header />
-      <Hero />
+      <Hero items={items} />
+      <section className="mx-auto max-w-6xl px-6 pt-16">
+        <div className="mb-5 flex items-end justify-between gap-4">
+          <div>
+            <p className="font-bold uppercase tracking-widest text-volcano">Empieza aquí</p>
+            <h2 className="display mt-2 text-3xl font-bold text-royal">Lugares en el mapa</h2>
+          </div>
+          <Link to="/explorar" className="flex items-center gap-1 font-bold text-royal">
+            Explorar <ChevronRight size={18} />
+          </Link>
+        </div>
+        <div className="relative h-72 overflow-hidden rounded-3xl bg-[#dce9de] shadow-sm sm:h-80">
+          <TourismMap items={featured} compact />
+          <p className="pointer-events-none absolute bottom-4 left-4 z-[500] rounded-full bg-white px-4 py-2 text-xs font-bold text-royal shadow">
+            Toca un punto para verlo en Google Maps
+          </p>
+        </div>
+      </section>
       <main id="destacados" className="mx-auto max-w-6xl px-6 py-24">
         <div className="mb-10 flex items-end justify-between">
           <div>
@@ -275,11 +328,9 @@ function Home({ items }) {
           </Link>
         </div>
         <div className="grid gap-6 md:grid-cols-3">
-          {items
-            .filter((item) => item.featured)
-            .map((item) => (
-              <Card key={item.slug} item={item} />
-            ))}
+          {featured.map((item) => (
+            <Card key={item.slug} item={item} />
+          ))}
         </div>
       </main>
     </>
@@ -295,7 +346,7 @@ function Explore({ items }) {
       items.filter((item) => {
         const matchesType = types.length === 0 || types.includes(item.type);
         const searchable = `${item.name} ${item.municipality} ${item.description}`.toLowerCase();
-        return matchesType && searchable.includes(query.toLowerCase());
+        return item.active && matchesType && searchable.includes(query.toLowerCase());
       }),
     [items, types, query]
   );
@@ -312,7 +363,7 @@ function Explore({ items }) {
       <div className="bg-royal px-6 pb-16 pt-32 text-white">
         <div className="mx-auto max-w-6xl">
           <p className="font-bold uppercase tracking-widest text-gold">Explora Colima</p>
-          <h1 className="display mt-3 text-5xl font-bold">Traza tu propia ruta.</h1>
+          <h1 className="display mt-3 text-5xl font-bold">Encuentra tu siguiente lugar.</h1>
           <div className="mt-8 flex max-w-2xl items-center gap-3 rounded-xl bg-white px-4 py-3 text-slate-500">
             <Search size={20} />
             <input
@@ -349,32 +400,11 @@ function Explore({ items }) {
             ))}
           </div>
 
-          <div className="order-1 h-[520px] rounded-3xl bg-[#dce9de] p-6 lg:sticky lg:top-6 lg:order-2">
-            <div
-              className="relative h-full overflow-hidden rounded-2xl bg-[#cfe2d1]"
-              style={{
-                backgroundImage: "radial-gradient(#8fb899 1px, transparent 1px)",
-                backgroundSize: "18px 18px",
-              }}
-            >
-              <div className="absolute inset-8 rounded-[45%] border-4 border-palm/30" />
-              <p className="absolute left-6 top-6 rounded-full bg-white px-4 py-2 text-xs font-bold text-palm shadow">
-                Mapa interactivo
-              </p>
-              {filtered.map((item, index) => (
-                <Link
-                  key={item.slug}
-                  to={`/lugar/${item.slug}`}
-                  style={{
-                    left: `${15 + (index * 19) % 70}%`,
-                    top: `${20 + (index * 31) % 65}%`,
-                  }}
-                  className="absolute -translate-x-1/2 -translate-y-1/2 text-volcano drop-shadow"
-                >
-                  <MapPin fill="currentColor" size={34} />
-                </Link>
-              ))}
-            </div>
+          <div className="relative order-1 h-[520px] overflow-hidden rounded-3xl bg-[#dce9de] lg:sticky lg:top-6 lg:order-2">
+            <TourismMap items={filtered} />
+            <p className="pointer-events-none absolute bottom-4 left-4 z-[500] rounded-full bg-white px-4 py-2 text-xs font-bold text-royal shadow">
+              Toca un punto para verlo en Google Maps
+            </p>
           </div>
         </div>
 
@@ -390,7 +420,12 @@ function Explore({ items }) {
 
 function Detail({ items }) {
   const { slug } = useParams();
-  const initialItem = items.find((item) => item.slug === slug) || items[0] || fallbackData[0];
+  const inactive = items.some((entry) => entry.slug === slug && !entry.active);
+  const initialItem = inactive
+    ? null
+    : items.find((entry) => entry.slug === slug) ||
+      fallbackData.find((entry) => entry.slug === slug) ||
+      null;
   const [item, setItem] = useState(initialItem);
 
   useEffect(() => {
@@ -402,9 +437,9 @@ function Detail({ items }) {
           setItem(row);
         }
       })
-      .catch(() => {
+      .catch((error) => {
         if (!ignore) {
-          setItem(initialItem);
+          setItem(error.message === "API error 404" ? null : initialItem);
         }
       });
 
@@ -412,6 +447,17 @@ function Detail({ items }) {
       ignore = true;
     };
   }, [initialItem, slug]);
+
+  if (!item || inactive) {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center bg-sand px-6 text-center">
+        <h1 className="display text-4xl font-bold text-royal">Contenido no disponible</h1>
+        <Link to="/explorar" className="mt-6 rounded-full bg-royal px-6 py-3 font-bold text-white">
+          Explorar lugares
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -433,9 +479,7 @@ function Detail({ items }) {
         <div className="grid gap-12 md:grid-cols-[1fr_280px]">
           <article>
             <p className="text-xl leading-relaxed text-slate-600">{item.description}</p>
-            <h2 className="display mt-10 text-3xl font-bold text-royal">
-              Vale la pena conocerlo
-            </h2>
+            <h2 className="display mt-10 text-3xl font-bold text-royal">Vale la pena conocerlo</h2>
             <p className="mt-4 leading-8 text-slate-600">
               Este espacio forma parte de la selección de lugares para descubrir Colima. Encuentra
               información práctica, disfruta el recorrido y comparte este lugar con quien quieras
@@ -459,6 +503,26 @@ function Detail({ items }) {
               <CalendarDays className="text-palm" size={18} />
               {item.schedule}
             </p>
+            {item.location_note && (
+              <p className="mt-5 rounded-lg bg-amber-50 p-3 text-sm leading-6 text-amber-900">
+                {item.location_note}
+              </p>
+            )}
+            {hasCoordinates(item) && (
+              <>
+                <div className="mt-6 h-56 overflow-hidden rounded-xl bg-[#dce9de]">
+                  <TourismMap items={[item]} compact />
+                </div>
+                <a
+                  href={googleMapsUrl(item)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-5 flex items-center gap-2 font-bold text-royal"
+                >
+                  <MapPin size={17} /> Ver en Google Maps <ArrowRight size={17} />
+                </a>
+              </>
+            )}
           </aside>
         </div>
       </main>
@@ -639,7 +703,9 @@ function AdminLogin() {
           required
         />
 
-        {error && <p className="mt-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
+        {error && (
+          <p className="mt-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>
+        )}
 
         <button
           type="submit"
