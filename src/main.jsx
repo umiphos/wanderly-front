@@ -344,7 +344,7 @@ function Explore({ items }) {
   const filtered = useMemo(
     () =>
       items.filter((item) => {
-        const matchesType = types.length === 0 || types.includes(item.type);
+        const matchesType = types.includes(item.type);                            
         const searchable = `${item.name} ${item.municipality} ${item.description}`.toLowerCase();
         return item.active && matchesType && searchable.includes(query.toLowerCase());
       }),
