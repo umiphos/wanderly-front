@@ -28,6 +28,34 @@ const MARKER_TYPE = {
   Eventos: "eventos",
 };
 
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function mapPopupHtml(item, mapsUrl) {
+  return `
+    <article class="tourism-popup">
+      <p class="tourism-popup__type">${escapeHtml(item.type)}</p>
+      <h3 class="tourism-popup__title">${escapeHtml(item.name)}</h3>
+      <p class="tourism-popup__meta">${escapeHtml(item.municipality)}, Colima</p>
+      ${
+        item.schedule
+          ? `<p class="tourism-popup__schedule">${escapeHtml(item.schedule)}</p>`
+          : ""
+      }
+      <div class="tourism-popup__actions">
+        <a href="/lugar/${encodeURIComponent(item.slug)}">Ver detalle</a>
+        <a href="${mapsUrl}" target="_blank" rel="noopener noreferrer">Google Maps</a>
+      </div>
+    </article>
+  `;
+}
+
 export default function TourismMap({ items, compact = false, className = "" }) {
   const containerRef = useRef(null);
   const mapRef = useRef(null);
@@ -81,11 +109,21 @@ export default function TourismMap({ items, compact = false, className = "" }) {
 
       const marker = L.marker(position, { icon, keyboard: true }).addTo(markers);
       const tooltip = document.createElement("span");
-      tooltip.textContent = `${item.name} · ${item.municipality} — abrir en Google Maps`;
+      tooltip.textContent = compact
+        ? `${item.name} · ${item.municipality} — abrir en Google Maps`
+        : `${item.name} · ${item.municipality}`;
       marker.bindTooltip(tooltip, { direction: "top", offset: [0, -18] });
-      marker.getElement()?.setAttribute("aria-label", `Ver ${item.name} en Google Maps`);
-      marker.getElement()?.setAttribute("role", "link");
-      marker.on("click", () => window.open(mapsUrl, "_blank", "noopener,noreferrer"));
+      marker.getElement()?.setAttribute("aria-label", `Ver ${item.name}`);
+      if (compact) {
+        marker.getElement()?.setAttribute("role", "link");
+        marker.on("click", () => window.open(mapsUrl, "_blank", "noopener,noreferrer"));
+      } else {
+        marker.bindPopup(mapPopupHtml(item, mapsUrl), {
+          closeButton: true,
+          maxWidth: 280,
+          minWidth: 220,
+        });
+      }
       positions.push(position);
     }
 

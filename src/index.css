@@ -52,3 +52,46 @@ body {
     0 0 0 4px #ffc107,
     0 2px 8px #17324d66;
 }
+.tourism-popup {
+  color: #17324d;
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+}
+.tourism-popup__type {
+  margin: 0 0 4px;
+  color: #d84315;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.tourism-popup__title {
+  margin: 0;
+  color: #0d47a1;
+  font-size: 18px;
+  line-height: 1.15;
+}
+.tourism-popup__meta,
+.tourism-popup__schedule {
+  margin: 8px 0 0;
+  color: #64748b;
+  font-size: 13px;
+  line-height: 1.4;
+}
+.tourism-popup__actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+.tourism-popup__actions a {
+  border-radius: 999px;
+  padding: 8px 10px;
+  background: #0d47a1;
+  color: white;
+  font-size: 12px;
+  font-weight: 800;
+  text-decoration: none;
+}
+.tourism-popup__actions a:last-child {
+  background: #ffc107;
+  color: #0d47a1;
+}
