@@ -532,6 +532,56 @@ function Detail({ items }) {
 
 function Admin({ items, setItems }) {
   const navigate = useNavigate();
+  const [adminStatus, setAdminStatus] = useState("checking");
+  const [adminQuery, setAdminQuery] = useState("");
+  const token = getAdminToken();
+
+  useEffect(() => {
+    if (!token) {
+      navigate("/admin/login", { replace: true });
+      return;
+    }
+
+    let ignore = false;
+
+    apiRequest("/api/admin/me", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then(() => {
+        if (!ignore) {
+          setAdminStatus("ready");
+        }
+      })
+      .catch(() => {
+        clearAdminToken();
+        if (!ignore) {
+          navigate("/admin/login", { replace: true });
+        }
+      });
+
+    return () => {
+      ignore = true;
+    };
+  }, [navigate, token]);
+
+  const filteredAdminItems = useMemo(() => {
+    const search = adminQuery.trim().toLowerCase();
+
+    if (!search) {
+      return items;
+    }
+
+    return items.filter((item) => {
+      const searchable = `${item.name} ${item.type} ${item.municipality} ${item.description}`
+        .toLowerCase();
+      return searchable.includes(search);
+    });
+  }, [adminQuery, items]);
+
+  const activeCount = items.filter((item) => item.active).length;
+  const inactiveCount = items.length - activeCount;
 
   const toggleActive = async (item) => {
     const nextActive = !item.active;
@@ -547,7 +597,7 @@ function Admin({ items, setItems }) {
       await apiRequest(`/api/admin/content/${item.slug}`, {
         method: "PATCH",
         headers: {
-          Authorization: `Bearer ${getAdminToken()}`,
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ active: nextActive }),
@@ -566,6 +616,23 @@ function Admin({ items, setItems }) {
     clearAdminToken();
     navigate("/admin/login", { replace: true });
   };
+
+  if (!token) {
+    return <Navigate to="/admin/login" replace />;
+  }
+
+  if (adminStatus === "checking") {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-slate-100 px-6 text-center">
+        <div>
+          <p className="text-sm font-bold uppercase tracking-widest text-volcano">
+            Administración
+          </p>
+          <h1 className="display mt-2 text-4xl font-bold text-royal">Validando sesión...</h1>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-slate-100">
@@ -586,15 +653,23 @@ function Admin({ items, setItems }) {
       <main className="mx-auto max-w-6xl px-6 py-12">
         <p className="text-sm font-bold uppercase tracking-widest text-volcano">Administración</p>
         <h1 className="display mt-2 text-5xl font-bold text-royal">Contenido</h1>
+        <p className="mt-3 text-sm text-slate-500">
+          {activeCount} activos · {inactiveCount} inactivos
+        </p>
         <div className="mt-8 rounded-2xl bg-white p-6 shadow-sm">
           <div className="mb-6 flex justify-between">
-            <input className="rounded-lg border px-4 py-2" placeholder="Buscar contenido..." />
+            <input
+              value={adminQuery}
+              onChange={(event) => setAdminQuery(event.target.value)}
+              className="rounded-lg border px-4 py-2"
+              placeholder="Buscar contenido..."
+            />
             <button className="rounded-lg bg-royal px-4 py-2 font-bold text-white">
               + Nuevo contenido
             </button>
           </div>
 
-          {items.map((item) => (
+          {filteredAdminItems.map((item) => (
             <div className="flex items-center justify-between border-t py-4" key={item.slug}>
               <div>
                 <p className="font-bold">{item.name}</p>
@@ -616,6 +691,12 @@ function Admin({ items, setItems }) {
               </div>
             </div>
           ))}
+
+          {!filteredAdminItems.length && (
+            <p className="border-t py-10 text-center text-sm text-slate-500">
+              No encontramos contenido con esa búsqueda.
+            </p>
+          )}
         </div>
       </main>
     </div>
