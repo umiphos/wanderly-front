@@ -26,7 +26,7 @@ La aplicación no realiza peticiones HTTP al backend. Leaflet obtiene los mosaic
 
 Entra desde el enlace **Administración** o visita `/admin`. No requiere usuario ni contraseña.
 
-La administración permite activar y desactivar registros. Los cambios se guardan en `localStorage` del navegador actual; no modifican el JSON del repositorio, no se comparten entre dispositivos y se pierden al limpiar los datos del sitio. Para restaurar el estado inicial, elimina la clave `wanderly_demo_places` del almacenamiento local del navegador.
+La administración permite activar y desactivar registros. Los cambios se guardan en `localStorage` del navegador actual; no modifican el JSON del repositorio, no se comparten entre dispositivos y se pierden al limpiar los datos del sitio. Para restaurar el estado inicial, usa el botón **Restaurar datos iniciales** en administración o elimina la clave `wanderly_demo_places` del almacenamiento local del navegador.
 
 **Importante:** esta administración no es segura y no debe utilizarse como panel real de producción. Es exclusivamente para presentar el flujo de la demo.
 
