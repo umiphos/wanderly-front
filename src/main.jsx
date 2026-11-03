@@ -262,11 +262,7 @@ function Explore({ items }) {
 function Detail({ items }) {
   const { slug } = useParams();
   const inactive = items.some((entry) => entry.slug === slug && !entry.active);
-  const initialItem = inactive
-    ? null
-    : items.find((entry) => entry.slug === slug) ||
-      fallbackData.find((entry) => entry.slug === slug) ||
-      null;
+  const initialItem = inactive ? null : items.find((entry) => entry.slug === slug) || null;
   const item = initialItem;
 
   if (!item || inactive) {
