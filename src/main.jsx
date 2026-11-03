@@ -3,7 +3,6 @@ import { createRoot } from "react-dom/client";
 import {
   BrowserRouter,
   Link,
-  Navigate,
   Route,
   Routes,
   useNavigate,
@@ -398,7 +397,7 @@ function Admin({ items, setItems }) {
           <div className="flex items-center gap-5 text-sm">
             <Link to="/">Ver sitio público</Link>
             <button onClick={handleLogout} className="font-bold text-gold">
-              Cerrar sesión
+              Salir de administración
             </button>
           </div>
         </div>
@@ -410,17 +409,18 @@ function Admin({ items, setItems }) {
         <p className="mt-3 text-sm text-slate-500">
           {activeCount} activos · {inactiveCount} inactivos
         </p>
+        <p className="mt-2 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+          Esta es una administración de demostración, sin autenticación ni sincronización. Los cambios se guardan en este navegador y no modifican el JSON del repositorio.
+        </p>
         <div className="mt-8 rounded-2xl bg-white p-6 shadow-sm">
-          <div className="mb-6 flex justify-between">
+          <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
             <input
               value={adminQuery}
               onChange={(event) => setAdminQuery(event.target.value)}
               className="rounded-lg border px-4 py-2"
               placeholder="Buscar contenido..."
             />
-            <button className="rounded-lg bg-royal px-4 py-2 font-bold text-white">
-              + Nuevo contenido
-            </button>
+            <p className="text-xs text-slate-500">Los cambios son locales a este navegador.</p>
           </div>
 
           {filteredAdminItems.map((item) => (
