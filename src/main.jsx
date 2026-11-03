@@ -3,7 +3,6 @@ import { createRoot } from "react-dom/client";
 import {
   BrowserRouter,
   Link,
-  Navigate,
   Route,
   Routes,
   useNavigate,
@@ -12,183 +11,25 @@ import {
 import { ArrowRight, CalendarDays, ChevronRight, MapPin, Menu, Search, Share2 } from "lucide-react";
 import TourismMap, { googleMapsUrl, hasCoordinates } from "./TourismMap";
 import "./index.css";
+import placesData from "./data/places.json";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000";
-const ADMIN_TOKEN_KEY = "wanderly_admin_token";
-
-const fallbackData = [
-  [
-    "comala-pueblo-magico",
-    "Comala, pueblo mágico",
-    "Turismo",
-    "Comala",
-    "Calles blancas, portales y la atmósfera que inspiró a Juan Rulfo.",
-    "https://images.unsplash.com/photo-1518005020951-eccb494ad742?w=1000",
-    19.3231443,
-    -103.7582664,
-    "Abierto todo el día",
-  ],
-  [
-    "volcan-de-fuego",
-    "Volcán de Fuego desde Suchitlán",
-    "Turismo",
-    "Comala",
-    "Observa el volcán desde Suchitlán. Este punto de referencia no ofrece acceso al cráter.",
-    "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1000",
-    19.3745585,
-    -103.7087398,
-    "Vista al aire libre · consulta avisos de Protección Civil",
-    "El marcador corresponde al centro de Suchitlán, no a un mirador específico ni al cráter. Comprueba el punto de observación y las condiciones locales antes de salir.",
-  ],
-  [
-    "playa-la-boquita",
-    "Playa La Boquita",
-    "Turismo",
-    "Manzanillo",
-    "Bahía tranquila, gastronomía local y atardeceres frente al Pacífico.",
-    "https://images.unsplash.com/photo-1507521428034-b723cf961d3e?w=1000",
-    19.1060124,
-    -104.398862,
-    "Abierto todo el día",
-  ],
-  [
-    "jardin-libertad",
-    "Jardín Libertad",
-    "Turismo",
-    "Colima",
-    "El corazón del centro histórico de la ciudad de Colima.",
-    "https://images.unsplash.com/photo-1531058020387-3be344556be6?w=1000",
-    19.2433584,
-    -103.7285218,
-    "Abierto todo el día",
-  ],
-  [
-    "laguna-la-maria",
-    "Laguna La María",
-    "Turismo",
-    "Comala",
-    "Un espacio natural para caminar, respirar y disfrutar el paisaje.",
-    "https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=1000",
-    19.461445,
-    -103.7095051,
-    "Horario de acceso por confirmar",
-    "El punto señala el centro de la laguna, no la entrada al centro ecoturístico. Confirma el acceso antes de viajar.",
-  ],
-  [
-    "museo-regional-historia",
-    "Museo Regional de Historia",
-    "Turismo",
-    "Colima",
-    "Conoce la historia y las expresiones culturales de la región.",
-    "https://images.unsplash.com/photo-1564399579883-451a5d44ec08?w=1000",
-    19.2427547,
-    -103.7289773,
-    "Horario de visita por confirmar",
-  ],
-  [
-    "tianguis-villa-alvarez",
-    "Tianguis de la Villa",
-    "Tianguis",
-    "Villa de Álvarez",
-    "Sabores, productos y encuentro comunitario en la avenida Josefa Ortiz de Domínguez.",
-    "https://images.unsplash.com/photo-1488459716781-31db52582fe9?w=1000",
-    19.2668533,
-    -103.7432098,
-    "Domingos · horario por confirmar",
-    "El punto corresponde al tianguis registrado en la avenida Josefa Ortiz de Domínguez. Confirma que opere y su horario antes de visitarlo.",
-  ],
-  [
-    "tianguis-artesanal-comala",
-    "Tianguis artesanal de Comala (demo)",
-    "Tianguis",
-    "Comala",
-    "Ejemplo de actividad artesanal de fechas variables; la sede del tianguis no está confirmada.",
-    "https://images.unsplash.com/photo-1528698827591-e19ccd7bc23d?w=1000",
-    19.3261439,
-    -103.755424,
-    "Fechas variables · por confirmar",
-    "Contenido ilustrativo. El punto ubica la Casa de la Cultura de Comala como referencia, no una sede confirmada del tianguis.",
-  ],
-  [
-    "mercado-obregon",
-    "Mercado Constitución",
-    "Mercados",
-    "Colima",
-    "Un recorrido por los sabores cotidianos de la capital.",
-    "https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?w=1000",
-    19.2402448,
-    -103.7298978,
-    "Horario de atención por confirmar",
-  ],
-  [
-    "feria-cultura-colima",
-    "Festival de Cultura Colima (demo)",
-    "Eventos",
-    "Colima",
-    "Ejemplo de evento cultural para demostrar los filtros; no existe cartelera confirmada.",
-    "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=1000",
-    19.2429725,
-    -103.7297302,
-    "Fecha de ejemplo: 18 oct 2026 · 18:00",
-    "Evento ilustrativo. El punto muestra el Teatro Hidalgo como recinto de referencia; ni la sede ni la fecha están confirmadas para este festival.",
-  ],
-].map(
-  (
-    [slug, name, type, municipality, description, image, lat, lng, schedule, location_note],
-    index
-  ) => ({
-    slug,
-    name,
-    type,
-    municipality,
-    description,
-    image,
-    lat,
-    lng,
-    location_note,
-    featured: index < 3,
-    active: true,
-    schedule,
-  })
-);
-
-async function apiRequest(path, options) {
-  const response = await fetch(`${API_BASE_URL}${path}`, options);
-
-  if (!response.ok) {
-    throw new Error(`API error ${response.status}`);
-  }
-
-  return response.json();
-}
+const LOCAL_DATA_KEY = "wanderly_demo_places";
 
 function useContent() {
-  const [items, setItems] = useState(fallbackData);
-  const [status, setStatus] = useState("loading");
+  const [items, setItems] = useState(() => {
+    try {
+      const saved = localStorage.getItem(LOCAL_DATA_KEY);
+      return saved ? JSON.parse(saved) : placesData;
+    } catch {
+      return placesData;
+    }
+  });
 
   useEffect(() => {
-    let ignore = false;
+    localStorage.setItem(LOCAL_DATA_KEY, JSON.stringify(items));
+  }, [items]);
 
-    apiRequest("/api/content")
-      .then((rows) => {
-        if (!ignore) {
-          setItems(rows);
-          setStatus("ready");
-        }
-      })
-      .catch(() => {
-        if (!ignore) {
-          setItems(fallbackData);
-          setStatus("fallback");
-        }
-      });
-
-    return () => {
-      ignore = true;
-    };
-  }, []);
-
-  return { items, setItems, status };
+  return { items, setItems };
 }
 
 function Header() {
@@ -338,7 +179,7 @@ function Home({ items }) {
 }
 
 function Explore({ items }) {
-  const [types, setTypes] = useState(["Turismo"]);
+  const [types, setTypes] = useState(["Turismo", "Tianguis", "Mercados", "Eventos"]);
   const [query, setQuery] = useState("");
 
   const filtered = useMemo(
@@ -421,32 +262,8 @@ function Explore({ items }) {
 function Detail({ items }) {
   const { slug } = useParams();
   const inactive = items.some((entry) => entry.slug === slug && !entry.active);
-  const initialItem = inactive
-    ? null
-    : items.find((entry) => entry.slug === slug) ||
-      fallbackData.find((entry) => entry.slug === slug) ||
-      null;
-  const [item, setItem] = useState(initialItem);
-
-  useEffect(() => {
-    let ignore = false;
-
-    apiRequest(`/api/content/${slug}`)
-      .then((row) => {
-        if (!ignore) {
-          setItem(row);
-        }
-      })
-      .catch((error) => {
-        if (!ignore) {
-          setItem(error.message === "API error 404" ? null : initialItem);
-        }
-      });
-
-    return () => {
-      ignore = true;
-    };
-  }, [initialItem, slug]);
+  const initialItem = inactive ? null : items.find((entry) => entry.slug === slug) || null;
+  const item = initialItem;
 
   if (!item || inactive) {
     return (
@@ -532,39 +349,9 @@ function Detail({ items }) {
 
 function Admin({ items, setItems }) {
   const navigate = useNavigate();
-  const [adminStatus, setAdminStatus] = useState("checking");
   const [adminQuery, setAdminQuery] = useState("");
-  const token = getAdminToken();
 
-  useEffect(() => {
-    if (!token) {
-      navigate("/admin/login", { replace: true });
-      return;
-    }
 
-    let ignore = false;
-
-    apiRequest("/api/admin/me", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then(() => {
-        if (!ignore) {
-          setAdminStatus("ready");
-        }
-      })
-      .catch(() => {
-        clearAdminToken();
-        if (!ignore) {
-          navigate("/admin/login", { replace: true });
-        }
-      });
-
-    return () => {
-      ignore = true;
-    };
-  }, [navigate, token]);
 
   const filteredAdminItems = useMemo(() => {
     const search = adminQuery.trim().toLowerCase();
@@ -583,56 +370,18 @@ function Admin({ items, setItems }) {
   const activeCount = items.filter((item) => item.active).length;
   const inactiveCount = items.length - activeCount;
 
-  const toggleActive = async (item) => {
+  const toggleActive = (item) => {
     const nextActive = !item.active;
-    const previousItems = items;
-
     setItems((current) =>
       current.map((currentItem) =>
         currentItem.slug === item.slug ? { ...currentItem, active: nextActive } : currentItem
       )
     );
-
-    try {
-      await apiRequest(`/api/admin/content/${item.slug}`, {
-        method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ active: nextActive }),
-      });
-    } catch (error) {
-      setItems(previousItems);
-
-      if (error.message === "API error 401") {
-        clearAdminToken();
-        navigate("/admin/login", { replace: true });
-      }
-    }
   };
 
-  const handleLogout = () => {
-    clearAdminToken();
-    navigate("/admin/login", { replace: true });
-  };
+  const handleLogout = () => navigate("/");
 
-  if (!token) {
-    return <Navigate to="/admin/login" replace />;
-  }
 
-  if (adminStatus === "checking") {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-100 px-6 text-center">
-        <div>
-          <p className="text-sm font-bold uppercase tracking-widest text-volcano">
-            Administración
-          </p>
-          <h1 className="display mt-2 text-4xl font-bold text-royal">Validando sesión...</h1>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-slate-100">
@@ -644,7 +393,7 @@ function Admin({ items, setItems }) {
           <div className="flex items-center gap-5 text-sm">
             <Link to="/">Ver sitio público</Link>
             <button onClick={handleLogout} className="font-bold text-gold">
-              Cerrar sesión
+              Salir de administración
             </button>
           </div>
         </div>
@@ -656,17 +405,18 @@ function Admin({ items, setItems }) {
         <p className="mt-3 text-sm text-slate-500">
           {activeCount} activos · {inactiveCount} inactivos
         </p>
+        <p className="mt-2 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+          Esta es una administración de demostración, sin autenticación ni sincronización. Los cambios se guardan en este navegador y no modifican el JSON del repositorio.
+        </p>
         <div className="mt-8 rounded-2xl bg-white p-6 shadow-sm">
-          <div className="mb-6 flex justify-between">
+          <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
             <input
               value={adminQuery}
               onChange={(event) => setAdminQuery(event.target.value)}
               className="rounded-lg border px-4 py-2"
               placeholder="Buscar contenido..."
             />
-            <button className="rounded-lg bg-royal px-4 py-2 font-bold text-white">
-              + Nuevo contenido
-            </button>
+            <div className="flex flex-wrap items-center gap-3"><p className="text-xs text-slate-500">Los cambios son locales a este navegador.</p><button onClick={() => { if (window.confirm("¿Restaurar el catálogo original de la demo?")) setItems(placesData); }} className="rounded-lg border border-slate-200 px-3 py-2 text-xs font-bold text-royal">Restaurar datos iniciales</button></div>
           </div>
 
           {filteredAdminItems.map((item) => (
@@ -703,105 +453,18 @@ function Admin({ items, setItems }) {
   );
 }
 
-function getAdminToken() {
-  return localStorage.getItem(ADMIN_TOKEN_KEY);
-}
-
-function saveAdminToken(token) {
-  localStorage.setItem(ADMIN_TOKEN_KEY, token);
-}
-
-function clearAdminToken() {
-  localStorage.removeItem(ADMIN_TOKEN_KEY);
-}
-
 function AdminLogin() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  useEffect(() => {
-    if (getAdminToken()) {
-      navigate("/admin", { replace: true });
-    }
-  }, [navigate]);
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    setError("");
-    setIsSubmitting(true);
-
-    try {
-      const response = await apiRequest("/api/admin/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-
-      saveAdminToken(response.access_token);
-      navigate("/admin", { replace: true });
-    } catch {
-      setError("Credenciales inválidas o servicio no disponible.");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
   return (
     <div className="flex min-h-screen items-center justify-center bg-royal px-6">
-      <form onSubmit={handleSubmit} className="w-full max-w-md rounded-2xl bg-white p-8 shadow-xl">
-        <p className="text-sm font-bold uppercase tracking-widest text-volcano">Administración</p>
-        <h1 className="display mt-2 text-4xl font-bold text-royal">Iniciar sesión</h1>
-        <p className="mt-3 text-sm leading-6 text-slate-500">
-          Acceso privado para gestionar el contenido de la demo turística.
-        </p>
-
-        <label className="mt-8 block text-sm font-bold text-slate-700" htmlFor="email">
-          Correo
-        </label>
-        <input
-          id="email"
-          type="email"
-          value={email}
-          onChange={(event) => setEmail(event.target.value)}
-          className="mt-2 w-full rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-royal"
-          autoComplete="email"
-          required
-        />
-
-        <label className="mt-5 block text-sm font-bold text-slate-700" htmlFor="password">
-          Contraseña
-        </label>
-        <input
-          id="password"
-          type="password"
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          className="mt-2 w-full rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-royal"
-          autoComplete="current-password"
-          required
-        />
-
-        {error && (
-          <p className="mt-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>
-        )}
-
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="mt-7 w-full rounded-lg bg-royal px-5 py-3 font-bold text-white transition hover:bg-blue-900 disabled:cursor-not-allowed disabled:opacity-60"
-        >
-          {isSubmitting ? "Entrando..." : "Entrar"}
-        </button>
-      </form>
+      <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-xl">
+        <p className="text-sm font-bold uppercase tracking-widest text-volcano">Administración de demo</p>
+        <h1 className="display mt-2 text-4xl font-bold text-royal">Acceso de demostración</h1>
+        <p className="mt-3 text-sm leading-6 text-slate-500">No requiere servidor ni credenciales. Los cambios se guardan en el almacenamiento local de este navegador.</p>
+        <button onClick={() => navigate("/admin")} className="mt-7 w-full rounded-lg bg-royal px-5 py-3 font-bold text-white">Entrar a administración</button>
+      </div>
     </div>
   );
-}
-
-function ProtectedAdminRoute({ children }) {
-  return getAdminToken() ? children : <Navigate to="/admin/login" replace />;
 }
 
 function App() {
@@ -813,14 +476,7 @@ function App() {
       <Route path="/explorar" element={<Explore items={items} />} />
       <Route path="/lugar/:slug" element={<Detail items={items} />} />
       <Route path="/admin/login" element={<AdminLogin />} />
-      <Route
-        path="/admin"
-        element={
-          <ProtectedAdminRoute>
-            <Admin items={items} setItems={setItems} />
-          </ProtectedAdminRoute>
-        }
-      />
+      <Route path="/admin" element={<Admin items={items} setItems={setItems} />} />
     </Routes>
   );
 }

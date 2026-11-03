@@ -1,0 +1,563 @@
+[
+  {
+    "slug": "comala-centro-historico",
+    "name": "Centro histórico de Comala",
+    "type": "Turismo",
+    "active": true,
+    "featured": true,
+    "description": "Calles de fachadas blancas, portales y jardines en el corazón del Pueblo Mágico de Comala.",
+    "tags": [
+      "Cultura",
+      "Pueblo Mágico",
+      "Centro histórico"
+    ],
+    "address": "Centro, Comala, Colima",
+    "municipality": "Comala",
+    "lat": 19.3231443,
+    "lng": -103.7582664,
+    "schedule": "Todos los días · Espacio público; servicios y comercios con horarios propios",
+    "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/95/MaderoStreetComala1.jpg/1280px-MaderoStreetComala1.jpg",
+    "images": [
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/95/MaderoStreetComala1.jpg/1280px-MaderoStreetComala1.jpg"
+    ],
+    "videos": [],
+    "source": "OpenStreetMap; Visita Colima",
+    "photoCredits": [
+      "https://commons.wikimedia.org/wiki/File:MaderoStreetComala1.jpg"
+    ],
+    "variableDates": false,
+    "dates": [],
+    "startDate": null,
+    "endDate": null
+  },
+  {
+    "slug": "parroquia-san-miguel-comala",
+    "name": "Parroquia de San Miguel Arcángel del Espíritu Santo",
+    "type": "Turismo",
+    "active": true,
+    "featured": true,
+    "description": "Templo emblemático situado frente al jardín principal de Comala.",
+    "tags": [
+      "Cultura",
+      "Arquitectura",
+      "Religioso"
+    ],
+    "address": "Calle Degollado, Centro, Comala, Colima",
+    "municipality": "Comala",
+    "lat": 19.3229762,
+    "lng": -103.7580569,
+    "schedule": "Consultar antes de visitar · El acceso puede variar durante celebraciones religiosas",
+    "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e3/MainChurchComala01.jpg/1280px-MainChurchComala01.jpg",
+    "images": [
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e3/MainChurchComala01.jpg/1280px-MainChurchComala01.jpg"
+    ],
+    "videos": [],
+    "source": "OpenStreetMap; Visita Colima",
+    "photoCredits": [
+      "https://commons.wikimedia.org/wiki/File:MainChurchComala01.jpg"
+    ],
+    "variableDates": false,
+    "dates": [],
+    "startDate": null,
+    "endDate": null
+  },
+  {
+    "slug": "museo-alejandro-rangel-nogueras",
+    "name": "Museo Universitario Alejandro Rangel Hidalgo y Hacienda de Nogueras",
+    "type": "Turismo",
+    "active": true,
+    "featured": true,
+    "description": "Antigua hacienda vinculada con la obra del artista colimense Alejandro Rangel Hidalgo.",
+    "tags": [
+      "Museos",
+      "Arte",
+      "Historia",
+      "Arquitectura"
+    ],
+    "address": "Calle Hacienda Nogueras, Nogueras, Comala, Colima",
+    "municipality": "Comala",
+    "lat": 19.3234908,
+    "lng": -103.7396034,
+    "schedule": "Consultar antes de visitar · Horario sujeto a la Universidad de Colima",
+    "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/36/MuseoUniversitarioRangel01.jpg/1280px-MuseoUniversitarioRangel01.jpg",
+    "images": [
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/36/MuseoUniversitarioRangel01.jpg/1280px-MuseoUniversitarioRangel01.jpg"
+    ],
+    "videos": [],
+    "source": "OpenStreetMap; Universidad de Colima",
+    "photoCredits": [
+      "https://commons.wikimedia.org/wiki/File:MuseoUniversitarioRangel01.jpg"
+    ],
+    "variableDates": false,
+    "dates": [],
+    "startDate": null,
+    "endDate": null
+  },
+  {
+    "slug": "laguna-la-maria",
+    "name": "Laguna La María",
+    "type": "Turismo",
+    "active": true,
+    "featured": false,
+    "description": "Laguna rodeada de vegetación en las faldas del volcán, conocida por sus paisajes y actividades al aire libre.",
+    "tags": [
+      "Naturaleza",
+      "Laguna",
+      "Ecoturismo"
+    ],
+    "address": "La Becerrera, Comala, Colima",
+    "municipality": "Comala",
+    "lat": 19.461445,
+    "lng": -103.7095051,
+    "schedule": "Consultar antes de visitar · Confirmar acceso y condiciones del camino",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/d/dd/Vista_laguna_-_panoramio.jpg",
+    "images": [
+      "https://upload.wikimedia.org/wikipedia/commons/d/dd/Vista_laguna_-_panoramio.jpg"
+    ],
+    "videos": [],
+    "source": "OpenStreetMap; Visita Colima",
+    "photoCredits": [
+      "https://commons.wikimedia.org/wiki/File:Vista_laguna_-_panoramio.jpg"
+    ],
+    "variableDates": false,
+    "dates": [],
+    "startDate": null,
+    "endDate": null
+  },
+  {
+    "slug": "suchitlan",
+    "name": "Suchitlán",
+    "type": "Turismo",
+    "active": true,
+    "featured": false,
+    "description": "Comunidad de origen indígena reconocida por sus tradiciones, gastronomía, artesanías y entorno natural.",
+    "tags": [
+      "Cultura",
+      "Comunidad",
+      "Gastronomía",
+      "Artesanías"
+    ],
+    "address": "Suchitlán, Comala, Colima",
+    "municipality": "Comala",
+    "lat": 19.3745585,
+    "lng": -103.7087398,
+    "schedule": "Todos los días · Comercios y espacios culturales con horarios propios",
+    "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a3/Suchitl%C3%A1n.JPG/1280px-Suchitl%C3%A1n.JPG",
+    "images": [
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a3/Suchitl%C3%A1n.JPG/1280px-Suchitl%C3%A1n.JPG"
+    ],
+    "videos": [],
+    "source": "OpenStreetMap; Visita Colima",
+    "photoCredits": [
+      "https://commons.wikimedia.org/wiki/File:Suchitl%C3%A1n.JPG"
+    ],
+    "variableDates": false,
+    "dates": [],
+    "startDate": null,
+    "endDate": null
+  },
+  {
+    "slug": "volcanes-desde-suchitlan",
+    "name": "Vista de los volcanes desde Suchitlán",
+    "type": "Turismo",
+    "active": true,
+    "featured": false,
+    "description": "Punto de referencia en Suchitlán para observar a distancia los volcanes de Colima; no representa acceso al cráter.",
+    "tags": [
+      "Naturaleza",
+      "Paisaje",
+      "Volcán"
+    ],
+    "address": "Suchitlán, Comala, Colima",
+    "municipality": "Comala",
+    "lat": 19.3745585,
+    "lng": -103.7087398,
+    "schedule": "Sujeto a condiciones meteorológicas · Consultar avisos de Protección Civil; no acercarse a zonas restringidas",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/4/4b/Volcanes_de_Colima_desde_Cofrad%C3%ADa_de_Suchitl%C3%A1n.jpg",
+    "images": [
+      "https://upload.wikimedia.org/wikipedia/commons/4/4b/Volcanes_de_Colima_desde_Cofrad%C3%ADa_de_Suchitl%C3%A1n.jpg"
+    ],
+    "videos": [],
+    "source": "OpenStreetMap; Protección Civil Colima",
+    "photoCredits": [
+      "https://commons.wikimedia.org/wiki/File:Volcanes_de_Colima_desde_Cofrad%C3%ADa_de_Suchitl%C3%A1n.jpg"
+    ],
+    "variableDates": false,
+    "dates": [],
+    "startDate": null,
+    "endDate": null
+  },
+  {
+    "slug": "jardin-libertad",
+    "name": "Jardín Libertad",
+    "type": "Turismo",
+    "active": true,
+    "featured": false,
+    "description": "Plaza principal del centro histórico de Colima, rodeada por portales y edificios representativos.",
+    "tags": [
+      "Cultura",
+      "Centro histórico",
+      "Familia"
+    ],
+    "address": "Centro, Colima, Colima",
+    "municipality": "Colima",
+    "lat": 19.2433584,
+    "lng": -103.7285218,
+    "schedule": "Todos los días · Espacio público",
+    "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/91/JardinLibertadColima1.jpg/1280px-JardinLibertadColima1.jpg",
+    "images": [
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/91/JardinLibertadColima1.jpg/1280px-JardinLibertadColima1.jpg"
+    ],
+    "videos": [],
+    "source": "OpenStreetMap; Visita Colima",
+    "photoCredits": [
+      "https://commons.wikimedia.org/wiki/File:JardinLibertadColima1.jpg"
+    ],
+    "variableDates": false,
+    "dates": [],
+    "startDate": null,
+    "endDate": null
+  },
+  {
+    "slug": "catedral-basilica-menor-colima",
+    "name": "Catedral Basílica Menor de Colima",
+    "type": "Turismo",
+    "active": true,
+    "featured": false,
+    "description": "Catedral situada junto al Jardín Libertad y uno de los principales referentes arquitectónicos del centro de Colima.",
+    "tags": [
+      "Cultura",
+      "Arquitectura",
+      "Religioso"
+    ],
+    "address": "Reforma 21, Centro, Colima, Colima",
+    "municipality": "Colima",
+    "lat": 19.243198,
+    "lng": -103.72878,
+    "schedule": "Consultar antes de visitar · El acceso puede variar durante servicios religiosos",
+    "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/ce/ColimaCathedral01.jpg/1280px-ColimaCathedral01.jpg",
+    "images": [
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/ce/ColimaCathedral01.jpg/1280px-ColimaCathedral01.jpg"
+    ],
+    "videos": [],
+    "source": "OpenStreetMap; Visita Colima",
+    "photoCredits": [
+      "https://commons.wikimedia.org/wiki/File:ColimaCathedral01.jpg"
+    ],
+    "variableDates": false,
+    "dates": [],
+    "startDate": null,
+    "endDate": null
+  },
+  {
+    "slug": "palacio-gobierno-colima",
+    "name": "Palacio de Gobierno de Colima",
+    "type": "Turismo",
+    "active": true,
+    "featured": false,
+    "description": "Edificio histórico frente al Jardín Libertad que forma parte del conjunto monumental del centro de Colima.",
+    "tags": [
+      "Cultura",
+      "Historia",
+      "Arquitectura"
+    ],
+    "address": "Reforma 37, Centro, Colima, Colima",
+    "municipality": "Colima",
+    "lat": 19.243045,
+    "lng": -103.729118,
+    "schedule": "Consultar antes de visitar · Confirmar acceso a exposiciones o recorridos",
+    "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/17/Palacio_de_Gobierno_Colima_2_noche_fiestas_patrias_2012.jpg/1280px-Palacio_de_Gobierno_Colima_2_noche_fiestas_patrias_2012.jpg",
+    "images": [
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/17/Palacio_de_Gobierno_Colima_2_noche_fiestas_patrias_2012.jpg/1280px-Palacio_de_Gobierno_Colima_2_noche_fiestas_patrias_2012.jpg"
+    ],
+    "videos": [],
+    "source": "Sistema de Información Cultural; Gobierno de Colima",
+    "photoCredits": [
+      "https://commons.wikimedia.org/wiki/File:Palacio_de_Gobierno_Colima_2_noche_fiestas_patrias_2012.jpg"
+    ],
+    "variableDates": false,
+    "dates": [],
+    "startDate": null,
+    "endDate": null
+  },
+  {
+    "slug": "zona-arqueologica-la-campana",
+    "name": "Zona arqueológica La Campana",
+    "type": "Turismo",
+    "active": true,
+    "featured": false,
+    "description": "Antiguo asentamiento urbano del occidente mesoamericano con plazas, estructuras y petroglifos.",
+    "tags": [
+      "Arqueología",
+      "Historia",
+      "Cultura"
+    ],
+    "address": "Acceso a la Zona Arqueológica, Villa de Álvarez, Colima",
+    "municipality": "Villa de Álvarez",
+    "lat": 19.268234,
+    "lng": -103.725265,
+    "schedule": "Consultar calendario oficial · Consultar horarios y tarifas vigentes del INAH",
+    "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/58/Zona_Arqueol%C3%B3gica_de_%22La_Campana%22%2C_Colima%2C_Colima.JPG/1280px-Zona_Arqueol%C3%B3gica_de_%22La_Campana%22%2C_Colima%2C_Colima.JPG",
+    "images": [
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/58/Zona_Arqueol%C3%B3gica_de_%22La_Campana%22%2C_Colima%2C_Colima.JPG/1280px-Zona_Arqueol%C3%B3gica_de_%22La_Campana%22%2C_Colima%2C_Colima.JPG"
+    ],
+    "videos": [],
+    "source": "INAH; OpenStreetMap",
+    "photoCredits": [
+      "https://commons.wikimedia.org/wiki/File:Zona_Arqueol%C3%B3gica_de_%22La_Campana%22,_Colima,_Colima.JPG"
+    ],
+    "variableDates": false,
+    "dates": [],
+    "startDate": null,
+    "endDate": null
+  },
+  {
+    "slug": "zona-arqueologica-el-chanal",
+    "name": "Zona arqueológica El Chanal",
+    "type": "Turismo",
+    "active": true,
+    "featured": false,
+    "description": "Sitio arqueológico del periodo Posclásico con templos, altares, plazas y una cancha para el juego de pelota.",
+    "tags": [
+      "Arqueología",
+      "Historia",
+      "Cultura"
+    ],
+    "address": "Calle Teotihuacán, El Chanal, Colima",
+    "municipality": "Colima",
+    "lat": 19.2931141,
+    "lng": -103.7060212,
+    "schedule": "Consultar calendario oficial · Consultar horarios y tarifas vigentes del INAH",
+    "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/57/Zona_Arqueol%C3%B3gica_de_El_Chanal_en_Colima%2C_M%C3%A9xico_%2815-01-2003%29.jpg/1280px-Zona_Arqueol%C3%B3gica_de_El_Chanal_en_Colima%2C_M%C3%A9xico_%2815-01-2003%29.jpg",
+    "images": [
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/57/Zona_Arqueol%C3%B3gica_de_El_Chanal_en_Colima%2C_M%C3%A9xico_%2815-01-2003%29.jpg/1280px-Zona_Arqueol%C3%B3gica_de_El_Chanal_en_Colima%2C_M%C3%A9xico_%2815-01-2003%29.jpg"
+    ],
+    "videos": [],
+    "source": "INAH; OpenStreetMap",
+    "photoCredits": [
+      "https://commons.wikimedia.org/wiki/File:Zona_Arqueol%C3%B3gica_de_El_Chanal_en_Colima,_M%C3%A9xico_(15-01-2003).jpg"
+    ],
+    "variableDates": false,
+    "dates": [],
+    "startDate": null,
+    "endDate": null
+  },
+  {
+    "slug": "parque-piedra-lisa",
+    "name": "Parque de la Piedra Lisa",
+    "type": "Turismo",
+    "active": true,
+    "featured": false,
+    "description": "Parque tradicional de la ciudad conocido por su gran piedra volcánica pulida, utilizada como resbaladilla.",
+    "tags": [
+      "Familia",
+      "Parque",
+      "Tradición"
+    ],
+    "address": "Parque de la Piedra Lisa, Colima, Colima",
+    "municipality": "Colima",
+    "lat": 19.2392892,
+    "lng": -103.7142399,
+    "schedule": "Todos los días · Espacio público; confirmar condiciones del parque",
+    "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8b/PiedraLisa01.jpg/1280px-PiedraLisa01.jpg",
+    "images": [
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8b/PiedraLisa01.jpg/1280px-PiedraLisa01.jpg"
+    ],
+    "videos": [],
+    "source": "OpenStreetMap; Visita Colima",
+    "photoCredits": [
+      "https://commons.wikimedia.org/wiki/File:PiedraLisa01.jpg"
+    ],
+    "variableDates": false,
+    "dates": [],
+    "startDate": null,
+    "endDate": null
+  },
+  {
+    "slug": "playa-la-audiencia",
+    "name": "Playa La Audiencia",
+    "type": "Turismo",
+    "active": true,
+    "featured": false,
+    "description": "Pequeña bahía de Manzanillo conocida por sus aguas generalmente tranquilas y actividades recreativas.",
+    "tags": [
+      "Playa",
+      "Mar",
+      "Familia"
+    ],
+    "address": "Península de Santiago, Manzanillo, Colima",
+    "municipality": "Manzanillo",
+    "lat": 19.1047001,
+    "lng": -104.35014,
+    "schedule": "Todos los días · Acceso sujeto a condiciones marítimas y locales",
+    "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/73/Playa_La_Audiencia.JPG/1280px-Playa_La_Audiencia.JPG",
+    "images": [
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/73/Playa_La_Audiencia.JPG/1280px-Playa_La_Audiencia.JPG"
+    ],
+    "videos": [],
+    "source": "OpenStreetMap; Visita Colima",
+    "photoCredits": [
+      "https://commons.wikimedia.org/wiki/File:Playa_La_Audiencia.JPG"
+    ],
+    "variableDates": false,
+    "dates": [],
+    "startDate": null,
+    "endDate": null
+  },
+  {
+    "slug": "playa-miramar",
+    "name": "Playa Miramar",
+    "type": "Turismo",
+    "active": true,
+    "featured": false,
+    "description": "Extensa playa de la bahía de Santiago, popular para caminar y disfrutar del paisaje del Pacífico.",
+    "tags": [
+      "Playa",
+      "Mar",
+      "Atardecer"
+    ],
+    "address": "Boulevard Costero Miguel de la Madrid, Manzanillo, Colima",
+    "municipality": "Manzanillo",
+    "lat": 19.1185177,
+    "lng": -104.3861076,
+    "schedule": "Todos los días · Acceso sujeto a condiciones marítimas y locales",
+    "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4d/Manzanillo%2C_Mexico_-_panoramio.jpg/1280px-Manzanillo%2C_Mexico_-_panoramio.jpg",
+    "images": [
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4d/Manzanillo%2C_Mexico_-_panoramio.jpg/1280px-Manzanillo%2C_Mexico_-_panoramio.jpg"
+    ],
+    "videos": [],
+    "source": "OpenStreetMap; Visita Colima",
+    "photoCredits": [
+      "https://commons.wikimedia.org/wiki/File:Manzanillo,_Mexico_-_panoramio.jpg"
+    ],
+    "variableDates": false,
+    "dates": [],
+    "startDate": null,
+    "endDate": null
+  },
+  {
+    "slug": "playa-cuyutlan",
+    "name": "Playa de Cuyutlán",
+    "type": "Turismo",
+    "active": true,
+    "featured": false,
+    "description": "Playa de arena oscura y oleaje fuerte junto a la localidad de Cuyutlán.",
+    "tags": [
+      "Playa",
+      "Mar",
+      "Naturaleza"
+    ],
+    "address": "Cuyutlán, Armería, Colima",
+    "municipality": "Armería",
+    "lat": 18.918889,
+    "lng": -104.069722,
+    "schedule": "Todos los días · Precaución por oleaje; consultar condiciones marítimas",
+    "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/20/Playa_de_Cuyutlan.JPG/1280px-Playa_de_Cuyutlan.JPG",
+    "images": [
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/20/Playa_de_Cuyutlan.JPG/1280px-Playa_de_Cuyutlan.JPG"
+    ],
+    "videos": [],
+    "source": "OpenStreetMap; Visita Colima",
+    "photoCredits": [
+      "https://commons.wikimedia.org/wiki/File:Playa_de_Cuyutlan.JPG"
+    ],
+    "variableDates": false,
+    "dates": [],
+    "startDate": null,
+    "endDate": null
+  },
+  {
+    "slug": "laguna-cuyutlan",
+    "name": "Laguna de Cuyutlán",
+    "type": "Turismo",
+    "active": true,
+    "featured": false,
+    "description": "Sistema lagunar costero de gran importancia ecológica, con manglares y hábitat para aves residentes y migratorias.",
+    "tags": [
+      "Naturaleza",
+      "Laguna",
+      "Manglar",
+      "Aves"
+    ],
+    "address": "Laguna de Cuyutlán, Colima",
+    "municipality": "Armería",
+    "lat": 18.9522572,
+    "lng": -104.0561209,
+    "schedule": "Consultar recorridos disponibles · El marcador señala una referencia central; confirmar acceso autorizado",
+    "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f0/Cuyutlan%2C_colima_._-_panoramio.jpg/1280px-Cuyutlan%2C_colima_._-_panoramio.jpg",
+    "images": [
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f0/Cuyutlan%2C_colima_._-_panoramio.jpg/1280px-Cuyutlan%2C_colima_._-_panoramio.jpg"
+    ],
+    "videos": [],
+    "source": "OpenStreetMap; información turística de Colima",
+    "photoCredits": [
+      "https://commons.wikimedia.org/wiki/File:Cuyutlan,_colima_._-_panoramio.jpg"
+    ],
+    "variableDates": false,
+    "dates": [],
+    "startDate": null,
+    "endDate": null
+  },
+  {
+    "slug": "cascada-el-salto-minatitlan",
+    "name": "Cascada El Salto",
+    "type": "Turismo",
+    "active": true,
+    "featured": false,
+    "description": "Cascada y paraje natural del municipio de Minatitlán, frecuentado por visitantes de la región.",
+    "tags": [
+      "Naturaleza",
+      "Cascada",
+      "Aventura"
+    ],
+    "address": "Carretera Manzanillo–Minatitlán, Minatitlán, Colima",
+    "municipality": "Minatitlán",
+    "lat": 19.3678102,
+    "lng": -104.0874484,
+    "schedule": "Consultar antes de visitar · Confirmar acceso, clima y condiciones del camino",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/d/d6/Cascada_de_El_Salto.jpg",
+    "images": [
+      "https://upload.wikimedia.org/wikipedia/commons/d/d6/Cascada_de_El_Salto.jpg"
+    ],
+    "videos": [],
+    "source": "OpenStreetMap; Visita Colima",
+    "photoCredits": [
+      "https://commons.wikimedia.org/wiki/File:Cascada_de_El_Salto.jpg"
+    ],
+    "variableDates": false,
+    "dates": [],
+    "startDate": null,
+    "endDate": null
+  },
+  {
+    "slug": "monumento-pez-vela",
+    "name": "Monumento al Pez Vela",
+    "type": "Turismo",
+    "active": true,
+    "featured": false,
+    "description": "Escultura monumental de Sebastián situada en el centro histórico y convertida en uno de los símbolos de Manzanillo.",
+    "tags": [
+      "Cultura",
+      "Escultura",
+      "Centro histórico"
+    ],
+    "address": "Centro Histórico, Manzanillo, Colima",
+    "municipality": "Manzanillo",
+    "lat": 19.054208,
+    "lng": -104.3168094,
+    "schedule": "Todos los días · Espacio público",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/7/74/Montaje_de_Manzanillo.jpg",
+    "images": [
+      "https://upload.wikimedia.org/wikipedia/commons/7/74/Montaje_de_Manzanillo.jpg"
+    ],
+    "videos": [],
+    "source": "OpenStreetMap; información turística de Manzanillo",
+    "photoCredits": [
+      "https://commons.wikimedia.org/wiki/File:Montaje_de_Manzanillo.jpg"
+    ],
+    "variableDates": false,
+    "dates": [],
+    "startDate": null,
+    "endDate": null
+  }
+]
