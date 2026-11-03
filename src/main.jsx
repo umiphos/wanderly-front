@@ -416,7 +416,7 @@ function Admin({ items, setItems }) {
               className="rounded-lg border px-4 py-2"
               placeholder="Buscar contenido..."
             />
-            <p className="text-xs text-slate-500">Los cambios son locales a este navegador.</p>
+            <div className="flex flex-wrap items-center gap-3"><p className="text-xs text-slate-500">Los cambios son locales a este navegador.</p><button onClick={() => { if (window.confirm("¿Restaurar el catálogo original de la demo?")) setItems(placesData); }} className="rounded-lg border border-slate-200 px-3 py-2 text-xs font-bold text-royal">Restaurar datos iniciales</button></div>
           </div>
 
           {filteredAdminItems.map((item) => (
